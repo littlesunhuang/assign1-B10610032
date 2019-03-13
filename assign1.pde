@@ -9,14 +9,15 @@ int soldierX,soldierY;
 int robotX,robotY;
 //laser
 int speedX;
-int ellipseX;//ellipseX=robotrX+25
+int lineX;//lineX=robotrX+25
+int lineDistanceX;
 
 void setup() {
-  size(640, 480, P2D);
+	size(640, 480, P2D);
   bgImg=loadImage("img/bg.jpg");
   groundhogImg=loadImage("img/groundhog.png");
   lifeImg=loadImage("img/life.png");
-  soilImg=loadImage("img/soil.png");
+	soilImg=loadImage("img/soil.png");
   robotImg=loadImage("img/robot.png");
   soldierImg=loadImage("img/soldier.png");
   
@@ -32,13 +33,16 @@ void setup() {
   robotY=floor(random(4)+2);
   robotY=robotY*80;
   //laser
-  speedX=2;
-  ellipseX=robotX+25;
+  
+  lineX=robotX+25;
+  
 }
 
 void draw() {
   soldierX+=3;
   soldierX%=640;
+  
+  
   
   image(bgImg,0,0);
   image(lifeImg,10,10);
@@ -56,6 +60,7 @@ void draw() {
   //groundhogImg
   image(groundhogImg,320,80);
   
+  
   //sun
   fill(253,184,19);
   stroke(255,255,0);
@@ -63,10 +68,10 @@ void draw() {
   ellipse(590,50,120,120);
   
   //laser
-  fill(255,0,0);
-  noStroke();
-  ellipse(ellipseX,robotY+37,10,10);
+  stroke(255,0,0);
+  strokeWeight(10);
   
-  ellipseX-=speedX;
-  
+  lineDistanceX=speedX%160;
+  line(lineX-lineDistanceX,robotY+37,lineX-lineDistanceX-40,robotY+37);
+  speedX+=2;
 }
