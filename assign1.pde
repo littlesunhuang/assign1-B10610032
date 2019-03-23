@@ -8,9 +8,13 @@ PImage soldierImg;
 int soldierX,soldierY;
 int robotX,robotY;
 //laser
-int speedX;
-int lineX;//lineX=robotrX+25
-int lineDistanceX;
+int laserPosition;
+int laserSpeed=2;
+int laserRange=160;
+int robotHandoffsetX=25;
+int robotHandoffsetY=37;
+int laserLineWeight=10;
+float laserMaxLength=30;
 
 void setup() {
 	size(640, 480, P2D);
@@ -22,7 +26,7 @@ void setup() {
   soldierImg=loadImage("img/soldier.png");
   
   //soldier
-  soldierX=220;
+  //soldierX=720;
   soldierY=400;
   soldierY=floor(random(4)+2);
   soldierY=soldierY*80;
@@ -32,16 +36,11 @@ void setup() {
   robotX=floor(random(160,560));
   robotY=floor(random(4)+2);
   robotY=robotY*80;
-  //laser
-  
-  lineX=robotX+25;
-  
 }
 
 void draw() {
   soldierX+=3;
-  soldierX%=640;
-  
+  soldierX%=720;
   
   
   image(bgImg,0,0);
@@ -49,8 +48,9 @@ void draw() {
   image(lifeImg,80,10);
   image(lifeImg,150,10);
   image(soilImg,0,160);
+  image(soldierImg,soldierX-80,soldierY);
   image(robotImg,robotX,robotY);
-  image(soldierImg,soldierX,soldierY);
+  
   
   //gress
   fill(124,204,25);
@@ -58,20 +58,25 @@ void draw() {
   rect(0,145,640,15);
   
   //groundhogImg
-  image(groundhogImg,320,80);
+  image(groundhogImg,280,80);
   
   
   //sun
+  noStroke();
+  fill(255,255,0);
+  ellipse(590,50,130,130);//outside
   fill(253,184,19);
-  stroke(255,255,0);
-  strokeWeight(5);
-  ellipse(590,50,120,120);
+  ellipse(590,50,120,120);//inside
   
   //laser
-  stroke(255,0,0);
-  strokeWeight(10);
   
-  lineDistanceX=speedX%160;
-  line(lineX-lineDistanceX,robotY+37,lineX-lineDistanceX-40,robotY+37);
-  speedX+=2;
+  laserPosition=(laserPosition+laserSpeed)%(laserRange+robotHandoffsetX);
+  
+  strokeWeight(laserLineWeight);
+  stroke(255,0,0);
+  float robotHandX=robotX+robotHandoffsetX;
+  float robotHandY=robotY+robotHandoffsetY;
+  float laserHeadX=min(robotHandX,robotHandX-laserPosition);
+  float laserTailX=min(robotHandX,laserHeadX+laserMaxLength);
+  line(laserHeadX,robotHandY,laserTailX,robotHandY);
 }
